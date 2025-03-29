@@ -10,8 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mui/icons-material": "^7.0.1",
+    "@mui/material": "^7.0.1",
+    "ag-grid-community": "^33.2.1",
+    "ag-grid-react": "^33.2.1",
+    "dayjs": "^1.11.13",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.4.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
