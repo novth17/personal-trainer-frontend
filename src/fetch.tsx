@@ -1,14 +1,14 @@
-import type { Customer, Training } from "./types";
-
-const CUSTOMER_API_URL = import.meta.env.VITE_CUSTOMER_API_URL;
-const TRAINING_API_URL = import.meta.env.VITE_TRAINING_API_URL;
-
 /**
  * Fetch helpers for Customer and Training data.
  *
  * Includes functions to fetch customers, trainings, and trainings with resolved customer info.
  * Handles basic fetch errors and returns typed results.
  */
+
+import type { Customer, Training } from "./types";
+
+const CUSTOMER_API_URL = import.meta.env.VITE_CUSTOMER_API_URL;
+const TRAINING_API_URL = import.meta.env.VITE_TRAINING_API_URL;
 
 export async function fetchCustomers(): Promise<Customer[]> {
   const response = await fetch(CUSTOMER_API_URL);

@@ -7,6 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Customer } from "../types";
 import { validateCustomer } from "../validation";
+import Snackbar from "@mui/material/Snackbar";
 
 type EditCustomerProps = {
   open: boolean; //whether the dialog is open or closed
@@ -24,6 +25,7 @@ export default function EditCustomer({
   const [editedCustomer, setEditedCustomer] = useState<Customer>(
     {} as Customer
   ); //pretend it’s not null
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   //prefill the form
   useEffect(() => {
@@ -59,7 +61,11 @@ export default function EditCustomer({
         if (!response.ok) throw new Error("Failed to update customer");
         return response.json();
       })
-      .then(() => onSave())
+      .then(() => {
+        onSave();
+        setSnackbarOpen(true);
+      })
+
       .catch((err) => console.error(err));
   };
 
@@ -144,6 +150,12 @@ export default function EditCustomer({
           <Button onClick={() => handleSave()}>Save</Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        message="Customer updated successfully!"
+      />
     </>
   );
 }

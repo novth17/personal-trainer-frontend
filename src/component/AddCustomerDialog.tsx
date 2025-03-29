@@ -5,15 +5,16 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import Snackbar from "@mui/material/Snackbar";
 import { Customer } from "../types";
 import { validateCustomer } from "../validation";
 
 type AddCustomerProps = {
   fetchCustomer: () => void;
 };
-
 export default function AddCustomer(props: AddCustomerProps) {
   const [open, setOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [customer, setCustomer] = useState<Customer>({} as Customer); //pretend it’s not null
 
   const handleClickOpen = () => {
@@ -50,6 +51,7 @@ export default function AddCustomer(props: AddCustomerProps) {
       })
       .then(() => props.fetchCustomer())
       .then(() => setOpen(false))
+      .then(() => setSnackbarOpen(true))
       .catch((err) => console.error(err));
   };
 
@@ -66,7 +68,7 @@ export default function AddCustomer(props: AddCustomerProps) {
             margin="dense"
             label="First Name"
             name="firstname"
-            value={customer.firstname}
+            value={customer.firstname || ""}
             onChange={handleChange}
             fullWidth
             variant="standard"
@@ -76,7 +78,7 @@ export default function AddCustomer(props: AddCustomerProps) {
             margin="dense"
             label="Last Name"
             name="lastname"
-            value={customer.lastname}
+            value={customer.lastname || ""}
             onChange={handleChange}
             fullWidth
             variant="standard"
@@ -86,7 +88,7 @@ export default function AddCustomer(props: AddCustomerProps) {
             margin="dense"
             label="Email"
             name="email"
-            value={customer.email}
+            value={customer.email || ""}
             onChange={handleChange}
             fullWidth
             variant="standard"
@@ -96,7 +98,7 @@ export default function AddCustomer(props: AddCustomerProps) {
             margin="dense"
             label="Phone"
             name="phone"
-            value={customer.phone}
+            value={customer.phone || ""}
             onChange={handleChange}
             fullWidth
             variant="standard"
@@ -106,7 +108,7 @@ export default function AddCustomer(props: AddCustomerProps) {
             margin="dense"
             label="Street Address"
             name="streetaddress"
-            value={customer.streetaddress}
+            value={customer.streetaddress || ""}
             onChange={handleChange}
             fullWidth
             variant="standard"
@@ -116,7 +118,7 @@ export default function AddCustomer(props: AddCustomerProps) {
             margin="dense"
             label="Postcode"
             name="postcode"
-            value={customer.postcode}
+            value={customer.postcode || ""}
             onChange={handleChange}
             fullWidth
             variant="standard"
@@ -126,7 +128,7 @@ export default function AddCustomer(props: AddCustomerProps) {
             margin="dense"
             label="City"
             name="city"
-            value={customer.city}
+            value={customer.city || ""}
             onChange={handleChange}
             fullWidth
             variant="standard"
@@ -137,6 +139,12 @@ export default function AddCustomer(props: AddCustomerProps) {
           <Button onClick={() => addCustomer()}>Save</Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        message="Customer added successfully!"
+      />
     </>
   );
 }
