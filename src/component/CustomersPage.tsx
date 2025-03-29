@@ -8,6 +8,7 @@ import {
 } from "ag-grid-community";
 import type { Customer } from "../types";
 import { fetchCustomers } from "../fetch";
+import AddCustomer from "./AddCustomerDialog";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -35,6 +36,7 @@ export default function CustomersPage() {
   return (
     <div style={{ width: "90%", height: 500 }}>
       <h2>Customers</h2>
+      <AddCustomer fetchCustomer={fetchCustomers} />
       <AgGridReact
         rowData={customers}
         columnDefs={columnDefs}

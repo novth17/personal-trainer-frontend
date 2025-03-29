@@ -27,8 +27,11 @@ export default function TrainingsPage() {
     {
       field: "date",
       headerName: "Date",
-      valueGetter: (params) =>
-        dayjs(params.data.date).format("DD.MM.YYYY HH:mm"),
+      valueGetter: (params) => {
+        if (params.data && params.data.date) {
+          return dayjs(params.data.date).format("DD.MM.YYYY HH:mm");
+        }
+      },
       filter: true,
     },
     { field: "duration", filter: true },

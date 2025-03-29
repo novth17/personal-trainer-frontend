@@ -1,10 +1,14 @@
-import type { Customer } from "./types";
-import type { Training } from "./types";
+import type { Customer, Training } from "./types";
 
 const CUSTOMER_API_URL = import.meta.env.VITE_CUSTOMER_API_URL;
 const TRAINING_API_URL = import.meta.env.VITE_TRAINING_API_URL;
 
-//functions that returns an array of Customer/Training objects and handles any possible fetch errors
+/**
+ * Fetch helpers for Customer and Training data.
+ *
+ * Includes functions to fetch customers, trainings, and trainings with resolved customer info.
+ * Handles basic fetch errors and returns typed results.
+ */
 
 export async function fetchCustomers(): Promise<Customer[]> {
   const response = await fetch(CUSTOMER_API_URL);
@@ -21,11 +25,10 @@ export async function fetchTrainings(): Promise<Training[]> {
   return data._embedded.trainings;
 }
 
-
 export async function fetchTrainingsWithCustomers(): Promise<Training[]> {
   const response = await fetch(import.meta.env.VITE_TRAINING_API_URL);
   if (!response.ok) {
-    throw new Error("Failed to fetch trainings");
+    throw new Error("Failed to fetch trainings with customers");
   }
 
   const data = await response.json();

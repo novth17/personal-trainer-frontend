@@ -14,11 +14,3 @@ export type Training = {
   activity: string;
   customer: Customer;
 };
-
-// export type TrainingWithCustomer = {
-//   id: number;
-//   date: string;
-//   duration: number;
-//   activity: string;
-//   customer: Customer;
-// };
