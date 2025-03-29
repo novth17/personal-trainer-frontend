@@ -9,8 +9,8 @@ import {
 } from "ag-grid-community";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
-import type { Customer } from "../types";
-import { fetchCustomers } from "../fetch";
+import type { Customer } from "../utils/types";
+import { fetchCustomers } from "../utils/fetch";
 import AddCustomer from "./AddCustomerDialog";
 import EditCustomer from "./EditCustomerDialog";
 
@@ -71,7 +71,6 @@ export default function CustomersPage() {
     setSelectedCustomer(customerToEdit);
     setEditDialogOpen(true);
   };
-
   const handleDeleteButton = (params: ICellRendererParams) => {
     if (window.confirm("Are you sure?")) {
       fetch(params.data._links.customer.href, {
@@ -80,10 +79,16 @@ export default function CustomersPage() {
         .then((response) => {
           if (!response.ok) throw new Error("Error when deleting customer");
 
-          return response.json();
+          // No need to parse JSON for DELETE response
+          return response;
         })
-        .then(() => fetchCustomers())
-        .then(() => setSnackbarOpen(true))
+        .then(() => {
+          // Update the state directly to remove the deleted customer
+          setCustomers((prevCustomers) =>
+            prevCustomers.filter((customer) => customer.id !== params.data.id)
+          );
+          setSnackbarOpen(true); // Show success message
+        })
         .catch((err) => console.error(err));
     }
   };
@@ -97,7 +102,6 @@ export default function CustomersPage() {
           setCustomers(updated);
         }}
       />
-
       <div style={{ width: "90%", height: 500 }}>
         <AgGridReact
           rowData={customers}
@@ -107,7 +111,6 @@ export default function CustomersPage() {
           theme={themeMaterial}
         />
       </div>
-
       <EditCustomer
         open={editDialogOpen}
         customer={selectedCustomer}
@@ -118,6 +121,7 @@ export default function CustomersPage() {
           setCustomers(updated);
         }}
       />
+
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}

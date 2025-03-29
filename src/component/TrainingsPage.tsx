@@ -7,8 +7,8 @@ import {
   themeMaterial,
 } from "ag-grid-community";
 import dayjs from "dayjs";
-import type { Training } from "../types";
-import { fetchTrainingsWithCustomers } from "../fetch";
+import type { Training } from "../utils/types";
+import { fetchTrainingsWithCustomers } from "../utils/fetch";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
