@@ -9,16 +9,16 @@ export type Customer = {
 };
 
 export type Training = {
-    date: string;
-    duration: number;
-    activity: string;
-
-  };
-
-export type GetTraining = {
-  id: number;
   date: string;
   duration: number;
   activity: string;
   customer: Customer;
 };
+
+// export type TrainingWithCustomer = {
+//   id: number;
+//   date: string;
+//   duration: number;
+//   activity: string;
+//   customer: Customer;
+// };

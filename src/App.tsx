@@ -1,5 +1,5 @@
 import CustomersPage from "./component/CustomersPage";
-import TrainingsPage from "./component/CustomersPage";
+import TrainingsPage from "./component/TrainingsPage";
 function App() {
   return (
     <>

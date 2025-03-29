@@ -7,6 +7,7 @@ import {
   themeMaterial,
 } from "ag-grid-community";
 import type { Customer } from "../types";
+import { fetchCustomers } from "../fetch";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -14,12 +15,11 @@ export default function CustomersPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
 
   useEffect(() => {
-    fetch(
-      "https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/customers"
-    )
-      .then((response) => response.json())
-      .then((data) => setCustomers(data._embedded.customers))
-      .catch((error) => console.error("Error fetching customers:", error));
+    const fetchData = async () => {
+      const result = await fetchCustomers();
+      setCustomers(result);
+    };
+    fetchData();
   }, []);
 
   const [columnDefs] = useState<ColDef<Customer>[]>([

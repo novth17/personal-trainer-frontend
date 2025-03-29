@@ -6,7 +6,9 @@ import {
   ColDef,
   themeMaterial,
 } from "ag-grid-community";
+import dayjs from "dayjs";
 import type { Training } from "../types";
+import { fetchTrainingsWithCustomers } from "../fetch";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -14,18 +16,30 @@ export default function TrainingsPage() {
   const [trainings, setTrainings] = useState<Training[]>([]);
 
   useEffect(() => {
-    fetch(
-      "https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/trainings"
-    )
-      .then((response) => response.json())
-      .then((data) => setTrainings(data._embedded.trainings))
-      .catch((error) => console.error("Error fetching trainings:", error));
+    const fetchData = async () => {
+      const result = await fetchTrainingsWithCustomers();
+      setTrainings(result);
+    };
+    fetchData();
   }, []);
 
   const [columnDefs] = useState<ColDef<Training>[]>([
-    { field: "date", filter: true },
+    {
+      field: "date",
+      headerName: "Date",
+      valueGetter: (params) =>
+        dayjs(params.data.date).format("DD.MM.YYYY HH:mm"),
+      filter: true,
+    },
     { field: "duration", filter: true },
     { field: "activity", filter: true },
+    {
+      field: "customer",
+      headerName: "Customer",
+      valueGetter: (params) =>
+        `${params.data.customer.firstname} ${params.data.customer.lastname}`,
+      filter: true,
+    },
   ]);
 
   return (
