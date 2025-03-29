@@ -78,16 +78,13 @@ export default function CustomersPage() {
       })
         .then((response) => {
           if (!response.ok) throw new Error("Error when deleting customer");
-
-          // No need to parse JSON for DELETE response
           return response;
         })
         .then(() => {
-          // Update the state directly to remove the deleted customer
-          setCustomers((prevCustomers) =>
-            prevCustomers.filter((customer) => customer.id !== params.data.id)
+          setCustomers((existingCustomers) =>
+            existingCustomers.filter((customer) => customer.id !== params.data.id)
           );
-          setSnackbarOpen(true); // Show success message
+          setSnackbarOpen(true);
         })
         .catch((err) => console.error(err));
     }
