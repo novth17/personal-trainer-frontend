@@ -36,8 +36,18 @@ export default function TrainingsPage() {
     {
       field: "customer",
       headerName: "Customer",
-      valueGetter: (params) =>
-        `${params.data.customer.firstname} ${params.data.customer.lastname}`,
+      valueGetter: (params) => {
+        if (
+          params.data &&
+          params.data.customer &&
+          params.data.customer.firstname &&
+          params.data.customer.lastname
+        ) {
+          return `${params.data.customer.firstname} ${params.data.customer.lastname}`;
+        } else {
+          return "Unknown customer";
+        }
+      },
       filter: true,
     },
   ]);
