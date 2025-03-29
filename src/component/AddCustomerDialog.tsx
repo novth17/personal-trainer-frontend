@@ -7,7 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Snackbar from "@mui/material/Snackbar";
 import { Customer } from "../utils/types";
-import { validateCustomer } from "../validation";
+import { validateCustomer } from "../utils/validation";
 
 type AddCustomerProps = {
   fetchCustomer: () => void;

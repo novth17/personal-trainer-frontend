@@ -1,4 +1,4 @@
-import type { Customer, Training } from "./utils/types";
+import type { Customer, Training } from "./types";
 
 export function validateCustomer(customer: Customer): string | null {
   if (!customer.email.includes("@")) return "Input correct email format";
