@@ -6,7 +6,7 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-import type { Customer } from "../utils/types";
+import type { Customer } from "../../utils/types";
 
 type DeleteCustomerDialogProps = {
   customer: Customer | null;
@@ -20,6 +20,7 @@ export default function DeleteCustomerDialog({
   onDelete,
 }: DeleteCustomerDialogProps) {
   return (
+    //<Dialog /> only opens when customer is truthy aka real, if not, stay closed
     <Dialog open={!!customer} onClose={onCancel}>
       <DialogTitle>Delete Customer</DialogTitle>
       <DialogContent>

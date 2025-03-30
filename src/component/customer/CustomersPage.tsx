@@ -6,13 +6,16 @@ import {
   ColDef,
   ICellRendererParams,
 } from "ag-grid-community";
-import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
-import type { Customer } from "../utils/types";
-import { fetchCustomers } from "../utils/fetch";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import type { Customer } from "../../utils/types";
+import { fetchCustomers } from "../../utils/fetch";
 import AddCustomer from "./AddCustomerDialog";
 import EditCustomer from "./EditCustomerDialog";
 import DeleteCustomerDialog from "./DeleteCustomerDialog";
+import AddTrainingDialog from "../training/AddTrainingDialog";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -64,48 +67,58 @@ export default function CustomersPage() {
   const columnDefs: ColDef<Customer>[] = [
     {
       headerName: "Actions",
-      width: 170,
+      width: 130,
       cellRenderer: (params: ICellRendererParams) => (
         <div
           style={{
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            gap: "0.5rem",
+            gap: "1.3rem",
             height: "100%",
           }}
         >
-          <Button
+          <IconButton
+            aria-label="edit"
             size="small"
+            onClick={() => handleEditButton(params)}
             sx={{
               color: "#0077b6",
-              borderColor: "#0077b6",
               "&:hover": {
-                backgroundColor: "#e0f2f1",
-                borderColor: "#005f87",
+                backgroundColor: "#e0f7fa",
               },
             }}
-            variant="outlined"
-            onClick={() => handleEditButton(params)}
           >
-            Edit
-          </Button>
-          <Button
+            <EditIcon fontSize="small" />
+          </IconButton>
+          <IconButton
+            aria-label="delete"
             size="small"
-            color="error"
-            variant="outlined"
             onClick={() => setCustomerToDelete(params.data)}
+            sx={{
+              color: "#d32f2f",
+              "&:hover": {
+                backgroundColor: "#fce4ec",
+              },
+            }}
           >
-            Delete
-          </Button>
+
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+          <AddTrainingDialog
+            customer={params.data}
+            onTrainingAdded={async () => {
+              // You can refresh trainings here if needed
+        }}
+      />
         </div>
       ),
     },
     { field: "firstname", filter: true, width: 120 },
     { field: "lastname", filter: true, width: 120 },
-    { field: "email", filter: true, width: 150 },
+    { field: "email", filter: true, width: 180 },
     { field: "phone", filter: true, width: 120 },
-    { field: "streetaddress", filter: true, width: 150 },
+    { field: "streetaddress", filter: true, width: 170 },
     { field: "postcode", filter: true, width: 120 },
     { field: "city", filter: true, width: 110 },
   ];

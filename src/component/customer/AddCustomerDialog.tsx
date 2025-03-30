@@ -1,85 +1,80 @@
-import { useState, useEffect } from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
+import { useState } from "react";
 import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import { Customer } from "../utils/types";
-import { validateCustomer } from "../utils/validation";
 import Snackbar from "@mui/material/Snackbar";
+import { Customer } from "../../utils/types";
+import { validateCustomer } from "../../utils/validation";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
 
-type EditCustomerProps = {
-  open: boolean; //whether the dialog is open or closed
-  customer: Customer | null; // customer object that you want to edit
-  onClose: () => void; //close when cxl or outside box
-  onSave: () => void; //success PUT request
+type AddCustomerProps = {
+  fetchCustomer: () => void;
 };
 
-export default function EditCustomer({
-  open,
-  customer,
-  onClose,
-  onSave,
-}: EditCustomerProps) {
-  const [editedCustomer, setEditedCustomer] = useState<Customer>(
-    {} as Customer
-  ); //pretend it’s not null
+export default function AddCustomer(props: AddCustomerProps) {
+  const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [customer, setCustomer] = useState<Customer>({} as Customer);
 
-  //prefill the form
-  useEffect(() => {
-    if (customer) setEditedCustomer(customer);
-  }, [customer]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setEditedCustomer((prev) => ({ ...prev, [name]: value }));
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomer({
+      ...customer,
+      [event.target.name]: event.target.value,
+    });
   };
 
-  const handleSave = () => {
+  const addCustomer = () => {
     //input validation
-    const error = validateCustomer(editedCustomer);
+    const error = validateCustomer(customer);
     if (error) {
       alert(error);
       return;
     }
 
-    if (!customer?._links?.customer.href) {
-      console.error("Missing customer link for update");
-      return;
-    }
-
-    fetch(customer?._links?.customer.href, {
-      method: "PUT",
+    fetch(import.meta.env.VITE_CUSTOMER_API_URL, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(editedCustomer),
+      body: JSON.stringify(customer),
     })
       .then((response) => {
-        if (!response.ok) throw new Error("Failed to update customer");
+        if (!response.ok) throw new Error("Error adding customer");
         return response.json();
       })
-      .then(() => {
-        onSave();
-        setSnackbarOpen(true);
-      })
-
+      .then(() => props.fetchCustomer())
+      .then(() => setOpen(false))
+      .then(() => setSnackbarOpen(true))
       .catch((err) => console.error(err));
   };
 
   return (
     <>
-      <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Edit customer</DialogTitle>
+      <Box mb={2}>
+        <Button variant="outlined" onClick={handleClickOpen}>
+          Add Customer
+        </Button>
+      </Box>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Add a new customer</DialogTitle>
         <DialogContent>
           <TextField
             required
             margin="dense"
             label="First Name"
             name="firstname"
-            value={editedCustomer.firstname || ""}
+            value={customer.firstname || ""}
             onChange={handleChange}
             fullWidth
             variant="standard"
@@ -89,7 +84,7 @@ export default function EditCustomer({
             margin="dense"
             label="Last Name"
             name="lastname"
-            value={editedCustomer.lastname || ""}
+            value={customer.lastname || ""}
             onChange={handleChange}
             fullWidth
             variant="standard"
@@ -99,7 +94,7 @@ export default function EditCustomer({
             margin="dense"
             label="Email"
             name="email"
-            value={editedCustomer.email || ""}
+            value={customer.email || ""}
             onChange={handleChange}
             fullWidth
             variant="standard"
@@ -109,7 +104,7 @@ export default function EditCustomer({
             margin="dense"
             label="Phone"
             name="phone"
-            value={editedCustomer.phone || ""}
+            value={customer.phone || ""}
             onChange={handleChange}
             fullWidth
             variant="standard"
@@ -119,7 +114,7 @@ export default function EditCustomer({
             margin="dense"
             label="Street Address"
             name="streetaddress"
-            value={editedCustomer.streetaddress || ""}
+            value={customer.streetaddress || ""}
             onChange={handleChange}
             fullWidth
             variant="standard"
@@ -129,7 +124,7 @@ export default function EditCustomer({
             margin="dense"
             label="Postcode"
             name="postcode"
-            value={editedCustomer.postcode || ""}
+            value={customer.postcode || ""}
             onChange={handleChange}
             fullWidth
             variant="standard"
@@ -139,22 +134,22 @@ export default function EditCustomer({
             margin="dense"
             label="City"
             name="city"
-            value={editedCustomer.city || ""}
+            value={customer.city || ""}
             onChange={handleChange}
             fullWidth
             variant="standard"
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={onClose}>Cancel</Button>
-          <Button onClick={() => handleSave()}>Save</Button>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={() => addCustomer()}>Save</Button>
         </DialogActions>
       </Dialog>
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}
         onClose={() => setSnackbarOpen(false)}
-        message="Customer updated successfully!"
+        message="Customer added successfully!"
       />
     </>
   );

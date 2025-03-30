@@ -1,6 +1,6 @@
 import { useState } from "react";
-import CustomersPage from "./component/CustomersPage";
-import TrainingsPage from "./component/TrainingsPage";
+import CustomersPage from "./component/customer/CustomersPage";
+import TrainingsPage from "./component/training/TrainingsPage";
 import { AppBar, Toolbar, Typography, Button, Container } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";

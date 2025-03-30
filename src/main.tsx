@@ -2,8 +2,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import App from "./App.tsx";
-import CustomersPage from "./component/CustomersPage";
-import TrainingsPage from "./component/TrainingsPage";
+import CustomersPage from "./component/customer/CustomersPage.tsx";
+import TrainingsPage from "./component/training/TrainingsPage.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

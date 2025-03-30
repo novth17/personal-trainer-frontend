@@ -7,13 +7,18 @@ import {
   themeMaterial,
 } from "ag-grid-community";
 import dayjs from "dayjs";
-import type { Training } from "../utils/types";
-import { fetchTrainingsWithCustomers } from "../utils/fetch";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import type { Training } from "../../utils/types";
+import { fetchTrainingsWithCustomers } from "../../utils/fetch";
+import DeleteTrainingDialog from "./DeleteTrainingDialog";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default function TrainingsPage() {
   const [trainings, setTrainings] = useState<Training[]>([]);
+  const [trainingToDelete, setTrainingToDelete] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,7 +28,37 @@ export default function TrainingsPage() {
     fetchData();
   }, []);
 
+  const handleConfirmDelete = async () => {
+    if (trainingToDelete) {
+      await fetch(trainingToDelete, { method: "DELETE" });
+      const updated = await fetchTrainingsWithCustomers();
+      setTrainings(updated);
+      setDeleteDialogOpen(false);
+      setTrainingToDelete(null);
+    }
+  };
+
   const [columnDefs] = useState<ColDef<Training>[]>([
+    {
+      headerName: "Actions",
+      field: "links[0].href",
+      cellRenderer: (params: any) => (
+        <IconButton
+          aria-label="delete"
+          color="error"
+          size="small"
+          onClick={() => {
+            setTrainingToDelete(params.value);
+            setDeleteDialogOpen(true);
+          }}
+        >
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      ),
+      width: 90,
+      filter: false,
+      sortable: false,
+    },
     {
       field: "date",
       headerName: "Date",
@@ -64,6 +99,11 @@ export default function TrainingsPage() {
         pagination={true}
         paginationAutoPageSize={true}
         theme={themeMaterial}
+      />
+      <DeleteTrainingDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
       />
     </div>
   );
