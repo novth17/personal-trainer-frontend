@@ -65,7 +65,6 @@ export default function EditCustomer({
         onSave();
         setSnackbarOpen(true);
       })
-
       .catch((err) => console.error(err));
   };
 

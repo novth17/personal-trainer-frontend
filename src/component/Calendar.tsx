@@ -42,9 +42,6 @@ export default function Calendar() {
         startAccessor="start"
         endAccessor="end"
         views={["month", "week", "day"]}
-        style={{ height: "100%" }}
-        popup
-        toolbar={true} 
       />
     </Box>
   );
