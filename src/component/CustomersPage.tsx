@@ -23,6 +23,9 @@ export default function CustomersPage() {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
   );
+  const [customerToDelete, setCustomerToDelete] = useState<Customer | null>(
+    null
+  );
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const [columnDefs] = useState<ColDef<Customer>[]>([
@@ -42,7 +45,7 @@ export default function CustomersPage() {
             size="small"
             color="error"
             variant="outlined"
-            onClick={() => handleDeleteButton(params)}
+            onClick={() => setCustomerToDelete(params.data)}
           >
             Delete
           </Button>
@@ -71,43 +74,73 @@ export default function CustomersPage() {
     setSelectedCustomer(customerToEdit);
     setEditDialogOpen(true);
   };
-  const handleDeleteButton = (params: ICellRendererParams) => {
-    if (window.confirm("Are you sure?")) {
-      fetch(params.data._links.customer.href, {
+
+  const confirmAndDeleteCustomer = async () => {
+    if (!customerToDelete) return;
+
+    try {
+      const response = await fetch(customerToDelete._links.customer.href, {
         method: "DELETE",
-      })
-        .then((response) => {
-          if (!response.ok) throw new Error("Error when deleting customer");
-          return response;
-        })
-        .then(() => {
-          setCustomers((existingCustomers) =>
-            existingCustomers.filter((customer) => customer.id !== params.data.id)
-          );
-          setSnackbarOpen(true);
-        })
-        .catch((err) => console.error(err));
+      });
+
+      if (!response.ok) throw new Error("Error deleting customer");
+
+      const updated = await fetchCustomers();
+      setCustomers(updated);
+      setSnackbarOpen(true);
+    } catch (err) {
+      console.error("Delete failed:", err);
+    } finally {
+      setCustomerToDelete(null); // reset selected customer
     }
   };
 
   return (
     <>
       <h2>Customers</h2>
+
       <AddCustomer
         fetchCustomer={async () => {
           const updated = await fetchCustomers();
           setCustomers(updated);
         }}
       />
-      <div style={{ width: "90%", height: 500 }}>
+
+      <div className="ag-theme-material" style={{ width: "90%", height: 500 }}>
         <AgGridReact
           rowData={customers}
           columnDefs={columnDefs}
           pagination={true}
           paginationAutoPageSize={true}
-          theme={themeMaterial}
         />
       </div>
+
+      {customerToDelete && (
+        <div style={{ marginTop: "1rem" }}>
+          <p>
+            Confirm delete for{" "}
+            <strong>
+              {customerToDelete.firstname} {customerToDelete.lastname}
+            </strong>
+            ?
+          </p>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={confirmAndDeleteCustomer}
+          >
+            Confirm Delete
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => setCustomerToDelete(null)}
+            style={{ marginLeft: "1rem" }}
+          >
+            Cancel
+          </Button>
+        </div>
+      )}
+
       <EditCustomer
         open={editDialogOpen}
         customer={selectedCustomer}
