@@ -4,7 +4,6 @@ import {
   AllCommunityModule,
   ModuleRegistry,
   ColDef,
-  themeMaterial,
   ICellRendererParams,
 } from "ag-grid-community";
 import Button from "@mui/material/Button";
@@ -13,53 +12,16 @@ import type { Customer } from "../utils/types";
 import { fetchCustomers } from "../utils/fetch";
 import AddCustomer from "./AddCustomerDialog";
 import EditCustomer from "./EditCustomerDialog";
+import DeleteCustomerDialog from "./DeleteCustomerDialog";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default function CustomersPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
-  //edit
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
-    null
-  );
-  const [customerToDelete, setCustomerToDelete] = useState<Customer | null>(
-    null
-  );
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const [customerToDelete, setCustomerToDelete] = useState<Customer | null>(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-  const [columnDefs] = useState<ColDef<Customer>[]>([
-    {
-      width: 200,
-      cellRenderer: (params: ICellRendererParams) => (
-        <div style={{ display: "flex", gap: "0.5rem" }}>
-          <Button
-            size="small"
-            color="primary"
-            variant="outlined"
-            onClick={() => handleEditButton(params)}
-          >
-            Edit
-          </Button>
-          <Button
-            size="small"
-            color="error"
-            variant="outlined"
-            onClick={() => setCustomerToDelete(params.data)}
-          >
-            Delete
-          </Button>
-        </div>
-      ),
-    },
-    { field: "firstname", filter: true, width: 100 },
-    { field: "lastname", filter: true, width: 150 },
-    { field: "email", filter: true, width: 150 },
-    { field: "phone", filter: true, width: 120 },
-    { field: "streetaddress", filter: true },
-    { field: "postcode", filter: true, width: 100 },
-    { field: "city", filter: true, width: 100 },
-  ]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -95,6 +57,40 @@ export default function CustomersPage() {
     }
   };
 
+  const columnDefs: ColDef<Customer>[] = [
+    {
+      headerName: "Actions",
+      width: 200,
+      cellRenderer: (params: ICellRendererParams) => (
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          <Button
+            size="small"
+            color="primary"
+            variant="outlined"
+            onClick={() => handleEditButton(params)}
+          >
+            Edit
+          </Button>
+          <Button
+            size="small"
+            color="error"
+            variant="outlined"
+            onClick={() => setCustomerToDelete(params.data)}
+          >
+            Delete
+          </Button>
+        </div>
+      ),
+    },
+    { field: "firstname", filter: true, width: 100 },
+    { field: "lastname", filter: true, width: 150 },
+    { field: "email", filter: true, width: 150 },
+    { field: "phone", filter: true, width: 120 },
+    { field: "streetaddress", filter: true },
+    { field: "postcode", filter: true, width: 100 },
+    { field: "city", filter: true, width: 100 },
+  ];
+
   return (
     <>
       <h2>Customers</h2>
@@ -115,31 +111,12 @@ export default function CustomersPage() {
         />
       </div>
 
-      {customerToDelete && (
-        <div style={{ marginTop: "1rem" }}>
-          <p>
-            Confirm delete for{" "}
-            <strong>
-              {customerToDelete.firstname} {customerToDelete.lastname}
-            </strong>
-            ?
-          </p>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={confirmAndDeleteCustomer}
-          >
-            Confirm Delete
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => setCustomerToDelete(null)}
-            style={{ marginLeft: "1rem" }}
-          >
-            Cancel
-          </Button>
-        </div>
-      )}
+      {/* ✅ Use the actual Dialog-based delete component */}
+      <DeleteCustomerDialog
+        customer={customerToDelete}
+        onCancel={() => setCustomerToDelete(null)}
+        onDelete={confirmAndDeleteCustomer}
+      />
 
       <EditCustomer
         open={editDialogOpen}
