@@ -20,11 +20,15 @@ interface CalendarEvent extends RBCEvent {
 
 export default function Calendar() {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [currentView, setCurrentView] = useState<"month" | "week" | "day">(
+    "month"
+  );
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
     fetchTrainingsWithCustomers().then((trainings: Training[]) => {
       const calendarEvents: CalendarEvent[] = trainings.map((training) => ({
-        title: `${training.activity} - ${training.customer.firstname} ${training.customer.lastname}`,
+        title: `${training.activity} - ${training.customer.lastname}`,
         start: new Date(training.date),
         end: new Date(
           new Date(training.date).getTime() + training.duration * 60000
@@ -42,6 +46,10 @@ export default function Calendar() {
         startAccessor="start"
         endAccessor="end"
         views={["month", "week", "day"]}
+        view={currentView}
+        onView={(view) => setCurrentView(view)}
+        date={currentDate}
+        onNavigate={(date) => setCurrentDate(date)}
       />
     </Box>
   );
