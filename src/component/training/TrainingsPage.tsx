@@ -35,9 +35,13 @@ export default function TrainingsPage() {
     if (!trainingToDelete) return;
 
     try {
-      const response = await fetch(trainingToDelete._links.training.href, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_TRAINING_API_URL}/${trainingToDelete.id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
       if (!response.ok) throw new Error("Error deleting training");
 
       const updated = await fetchTrainingsWithCustomers();

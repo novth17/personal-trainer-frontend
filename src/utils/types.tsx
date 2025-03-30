@@ -10,13 +10,21 @@ export type Customer = {
 };
 
 export type Training = {
+  _links: any;
+  id: number;
   date: string;
   duration: number;
   activity: string;
-  customer: Customer;
-  _links: {
-    training: { href: string };
-    customer: { href: string };
+  customer: {
+    id: number;
+    firstname: string;
+    lastname: string;
+    streetaddress: string;
+    postcode: string;
+    city: string;
+    email: string;
+    phone: string;
   };
 };
+
 
