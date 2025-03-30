@@ -58,6 +58,7 @@ export async function fetchTrainingsWithCustomers(): Promise<Training[]> {
         duration: t.duration,
         activity: t.activity,
         customer,
+        _links: t._links,
       };
     })
   );

@@ -8,6 +8,7 @@ import {
   Button,
   Snackbar,
   IconButton,
+  Box
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -20,7 +21,10 @@ type Props = {
   onTrainingAdded: () => void;
 };
 
-export default function AddTrainingDialog({ customer, onTrainingAdded }: Props) {
+export default function AddTrainingDialog({
+  customer,
+  onTrainingAdded,
+}: Props) {
   const [open, setOpen] = useState(false);
   const [activity, setActivity] = useState("");
   const [duration, setDuration] = useState("");
@@ -29,7 +33,7 @@ export default function AddTrainingDialog({ customer, onTrainingAdded }: Props) 
 
   const handleSave = async () => {
     if (!activity || !duration || !date) {
-      alert("Please fill all fields");
+      alert("Please fill all fields!");
       return;
     }
 
@@ -82,11 +86,13 @@ export default function AddTrainingDialog({ customer, onTrainingAdded }: Props) 
         <DialogTitle>Add Training for {customer.firstname}</DialogTitle>
         <DialogContent>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Date"
-              value={date}
-              onChange={(newValue) => setDate(newValue)}
-            />
+            <Box mt={1} mb={1}>
+              <DatePicker
+                label="Date"
+                value={date}
+                onChange={(newValue) => setDate(newValue)}
+              />
+            </Box>
           </LocalizationProvider>
           <TextField
             margin="dense"
@@ -108,7 +114,9 @@ export default function AddTrainingDialog({ customer, onTrainingAdded }: Props) 
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button onClick={handleSave} variant="contained">Save</Button>
+          <Button onClick={handleSave} variant="contained">
+            Save
+          </Button>
         </DialogActions>
       </Dialog>
 
@@ -117,6 +125,7 @@ export default function AddTrainingDialog({ customer, onTrainingAdded }: Props) 
         autoHideDuration={3000}
         onClose={() => setSnackbarOpen(false)}
         message="Training added successfully!"
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       />
     </>
   );

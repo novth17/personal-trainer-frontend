@@ -1,21 +1,38 @@
-import { Dialog, DialogTitle, DialogActions, Button } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  Button,
+  DialogContent,
+  Typography,
+} from "@mui/material";
+import { Training } from "../../utils/types";
 
-type Props = {
-  open: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
+type DeleteTrainingDialogProps = {
+  training: Training | null;
+  onCancel: () => void;
+  onDelete: () => void;
 };
 
-const DeleteTrainingDialog = ({ open, onClose, onConfirm }: Props) => (
-  <Dialog open={open} onClose={onClose}>
-    <DialogTitle>Are you sure you want to delete this training?</DialogTitle>
-    <DialogActions>
-      <Button onClick={onClose}>No</Button>
-      <Button onClick={onConfirm} color="error" variant="contained">
-        Yes
-      </Button>
-    </DialogActions>
-  </Dialog>
-);
-
-export default DeleteTrainingDialog;
+export default function DeleteTrainingDialog({
+  training,
+  onCancel,
+  onDelete,
+}: DeleteTrainingDialogProps) {
+  return (
+    <Dialog open={!!training} onClose={onCancel}>
+      <DialogTitle> Delete Training</DialogTitle>
+      <DialogContent>
+        <Typography>
+          Are you sure you want to delete <strong>{training?.activity}</strong>?
+        </Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onCancel}>Cancel</Button>
+        <Button onClick={onDelete} color="error" variant="contained">
+          Delete
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}

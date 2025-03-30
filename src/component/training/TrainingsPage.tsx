@@ -5,8 +5,11 @@ import {
   ModuleRegistry,
   ColDef,
   themeMaterial,
+  ICellRendererParams, 
 } from "ag-grid-community";
 import dayjs from "dayjs";
+import Snackbar from "@mui/material/Snackbar";
+
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import type { Training } from "../../utils/types";
@@ -17,23 +20,34 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default function TrainingsPage() {
   const [trainings, setTrainings] = useState<Training[]>([]);
-  const [trainingToDelete, setTrainingToDelete] = useState<string | null>(null);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [trainingToDelete, setTrainingToDelete] = useState<Training | null>(
+    null
+  );
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       const result = await fetchTrainingsWithCustomers();
-      setTrainings(result);
+      setTimeout(() => setTrainings(result), 0);
     };
     fetchData();
   }, []);
 
-  const handleConfirmDelete = async () => {
-    if (trainingToDelete) {
-      await fetch(trainingToDelete, { method: "DELETE" });
+  const confirmDeleteTraining = async () => {
+    if (!trainingToDelete) return;
+
+    try {
+      const response = await fetch(trainingToDelete._links.training.href, {
+        method: "DELETE",
+      });
+      if (!response.ok) throw new Error("Error deleting training");
+
       const updated = await fetchTrainingsWithCustomers();
       setTrainings(updated);
-      setDeleteDialogOpen(false);
+      setSnackbarOpen(true);
+    } catch (err) {
+      console.error("Delete failed:", err);
+    } finally {
       setTrainingToDelete(null);
     }
   };
@@ -41,19 +55,27 @@ export default function TrainingsPage() {
   const [columnDefs] = useState<ColDef<Training>[]>([
     {
       headerName: "Actions",
-      field: "links[0].href",
-      cellRenderer: (params: any) => (
+      cellRenderer: (params: ICellRendererParams) => (
+        <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "1.3rem",
+          height: "100%",
+        }}
+      >
         <IconButton
           aria-label="delete"
           color="error"
           size="small"
           onClick={() => {
-            setTrainingToDelete(params.value);
-            setDeleteDialogOpen(true);
+            setTrainingToDelete(params.data);
           }}
         >
           <DeleteIcon fontSize="small" />
         </IconButton>
+        </div>
       ),
       width: 90,
       filter: false,
@@ -100,10 +122,18 @@ export default function TrainingsPage() {
         paginationAutoPageSize={true}
         theme={themeMaterial}
       />
+
       <DeleteTrainingDialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-        onConfirm={handleConfirmDelete}
+        training={trainingToDelete}
+        onCancel={() => setTrainingToDelete(null)}
+        onDelete={confirmDeleteTraining}
+      />
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        message="Training deleted successfully!"
       />
     </div>
   );
