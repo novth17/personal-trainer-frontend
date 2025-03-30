@@ -44,7 +44,7 @@ export default function Calendar() {
         views={["month", "week", "day"]}
         style={{ height: "100%" }}
         popup
-        toolbar={true} // <- this line ensures the toolbar shows
+        toolbar={true} 
       />
     </Box>
   );
