@@ -56,7 +56,7 @@ export default function AddCustomer(props: AddCustomerProps) {
       .then(() => props.fetchCustomer())
       .then(() => setOpen(false))
       .then(() => setSnackbarOpen(true))
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Failed to add customer:", err));
   };
 
   return (
@@ -145,11 +145,12 @@ export default function AddCustomer(props: AddCustomerProps) {
           <Button onClick={() => addCustomer()}>Save</Button>
         </DialogActions>
       </Dialog>
+      
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}
         onClose={() => setSnackbarOpen(false)}
-        message="Customer added successfully!"
+        message="Customer added successfully!"  
       />
     </>
   );

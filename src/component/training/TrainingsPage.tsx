@@ -4,7 +4,6 @@ import {
   AllCommunityModule,
   ModuleRegistry,
   ColDef,
-  themeMaterial,
   ICellRendererParams,
 } from "ag-grid-community";
 import dayjs from "dayjs";
@@ -19,10 +18,11 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default function TrainingsPage() {
   const [trainings, setTrainings] = useState<Training[]>([]);
-  const [trainingToDelete, setTrainingToDelete] = useState<Training | null>(null);
+  const [trainingToDelete, setTrainingToDelete] = useState<Training | null>(
+    null
+  );
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  // ✅ Fetch trainings on initial render
   useEffect(() => {
     const fetchData = async () => {
       const result = await fetchTrainingsWithCustomers();
@@ -31,7 +31,6 @@ export default function TrainingsPage() {
     fetchData();
   }, []);
 
-  // ✅ Delete training and refresh data
   const confirmDeleteTraining = async () => {
     if (!trainingToDelete) return;
 
@@ -93,8 +92,18 @@ export default function TrainingsPage() {
       field: "customer",
       headerName: "Customer",
       valueGetter: (params) => {
-        const c = params.data?.customer;
-        return c?.firstname && c?.lastname ? `${c.firstname} ${c.lastname}` : "Unknown customer";
+        if (
+          params.data &&
+          params.data.customer &&
+          params.data.customer.firstname &&
+          params.data.customer.lastname
+        ) {
+          return `${params.data?.customer?.firstname ?? "Unknown"} ${
+            params.data?.customer?.lastname ?? "Customer"
+          }`;
+        } else {
+          return "Unknown customer";
+        }
       },
       filter: true,
     },
@@ -103,29 +112,28 @@ export default function TrainingsPage() {
   return (
     <>
       <h2>Trainings</h2>
-
-      <div className="ag-theme-material" style={{ width: "90%", height: 500 }}>
+      <div className="ag-theme-material" style={{ width: "80%", height: 500 }}>
         <AgGridReact
           rowData={trainings}
           columnDefs={columnDefs}
           pagination={true}
           paginationAutoPageSize={true}
-          theme={themeMaterial}
         />
       </div>
+      <div>
+        <DeleteTrainingDialog
+          training={trainingToDelete}
+          onCancel={() => setTrainingToDelete(null)}
+          onDelete={confirmDeleteTraining}
+        />
 
-      <DeleteTrainingDialog
-        training={trainingToDelete}
-        onCancel={() => setTrainingToDelete(null)}
-        onDelete={confirmDeleteTraining}
-      />
-
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        message="Training deleted successfully!"
-      />
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={() => setSnackbarOpen(false)}
+          message="Training deleted successfully!"
+        />
+      </div>
     </>
   );
 }
