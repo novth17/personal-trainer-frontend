@@ -5,11 +5,10 @@ import {
   ModuleRegistry,
   ColDef,
   themeMaterial,
-  ICellRendererParams, 
+  ICellRendererParams,
 } from "ag-grid-community";
 import dayjs from "dayjs";
 import Snackbar from "@mui/material/Snackbar";
-
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import type { Training } from "../../utils/types";
@@ -20,19 +19,19 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default function TrainingsPage() {
   const [trainings, setTrainings] = useState<Training[]>([]);
-  const [trainingToDelete, setTrainingToDelete] = useState<Training | null>(
-    null
-  );
+  const [trainingToDelete, setTrainingToDelete] = useState<Training | null>(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
+  // ✅ Fetch trainings on initial render
   useEffect(() => {
     const fetchData = async () => {
       const result = await fetchTrainingsWithCustomers();
-      setTimeout(() => setTrainings(result), 0);
+      setTrainings(result);
     };
     fetchData();
   }, []);
 
+  // ✅ Delete training and refresh data
   const confirmDeleteTraining = async () => {
     if (!trainingToDelete) return;
 
@@ -52,43 +51,40 @@ export default function TrainingsPage() {
     }
   };
 
-  const [columnDefs] = useState<ColDef<Training>[]>([
+  const columnDefs: ColDef<Training>[] = [
     {
       headerName: "Actions",
+      width: 90,
       cellRenderer: (params: ICellRendererParams) => (
         <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "1.3rem",
-          height: "100%",
-        }}
-      >
-        <IconButton
-          aria-label="delete"
-          color="error"
-          size="small"
-          onClick={() => {
-            setTrainingToDelete(params.data);
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "1.3rem",
+            height: "100%",
           }}
         >
-          <DeleteIcon fontSize="small" />
-        </IconButton>
+          <IconButton
+            aria-label="delete"
+            size="small"
+            color="error"
+            onClick={() => setTrainingToDelete(params.data)}
+          >
+            <DeleteIcon fontSize="small" />
+          </IconButton>
         </div>
       ),
-      width: 90,
       filter: false,
       sortable: false,
     },
     {
       field: "date",
       headerName: "Date",
-      valueGetter: (params) => {
-        if (params.data && params.data.date) {
-          return dayjs(params.data.date).format("DD.MM.YYYY HH:mm");
-        }
-      },
+      valueGetter: (params) =>
+        params.data?.date
+          ? dayjs(params.data.date).format("DD.MM.YYYY HH:mm")
+          : "",
       filter: true,
     },
     { field: "duration", filter: true },
@@ -97,31 +93,26 @@ export default function TrainingsPage() {
       field: "customer",
       headerName: "Customer",
       valueGetter: (params) => {
-        if (
-          params.data &&
-          params.data.customer &&
-          params.data.customer.firstname &&
-          params.data.customer.lastname
-        ) {
-          return `${params.data.customer.firstname} ${params.data.customer.lastname}`;
-        } else {
-          return "Unknown customer";
-        }
+        const c = params.data?.customer;
+        return c?.firstname && c?.lastname ? `${c.firstname} ${c.lastname}` : "Unknown customer";
       },
       filter: true,
     },
-  ]);
+  ];
 
   return (
-    <div style={{ width: "90%", height: 500 }}>
+    <>
       <h2>Trainings</h2>
-      <AgGridReact
-        rowData={trainings}
-        columnDefs={columnDefs}
-        pagination={true}
-        paginationAutoPageSize={true}
-        theme={themeMaterial}
-      />
+
+      <div className="ag-theme-material" style={{ width: "90%", height: 500 }}>
+        <AgGridReact
+          rowData={trainings}
+          columnDefs={columnDefs}
+          pagination={true}
+          paginationAutoPageSize={true}
+          theme={themeMaterial}
+        />
+      </div>
 
       <DeleteTrainingDialog
         training={trainingToDelete}
@@ -135,6 +126,6 @@ export default function TrainingsPage() {
         onClose={() => setSnackbarOpen(false)}
         message="Training deleted successfully!"
       />
-    </div>
+    </>
   );
 }
