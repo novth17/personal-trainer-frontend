@@ -1,13 +1,12 @@
 import { useState } from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
+
 import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
+
 import Snackbar from "@mui/material/Snackbar";
 import { Customer } from "../utils/types";
 import { validateCustomer } from "../utils/validation";
+import { Box, Button, Dialog, DialogContent, DialogTitle, TextField } from "@mui/material";
+
 
 type AddCustomerProps = {
   fetchCustomer: () => void;
@@ -15,7 +14,7 @@ type AddCustomerProps = {
 export default function AddCustomer(props: AddCustomerProps) {
   const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [customer, setCustomer] = useState<Customer>({} as Customer); //pretend it’s not null
+  const [customer, setCustomer] = useState<Customer>({} as Customer);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -57,9 +56,11 @@ export default function AddCustomer(props: AddCustomerProps) {
 
   return (
     <>
+     <Box mb={2}>
       <Button variant="outlined" onClick={handleClickOpen}>
         Add Customer
       </Button>
+    </Box>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add a new customer</DialogTitle>
         <DialogContent>

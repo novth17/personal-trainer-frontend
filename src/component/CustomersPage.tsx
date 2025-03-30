@@ -19,8 +19,12 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 export default function CustomersPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
-  const [customerToDelete, setCustomerToDelete] = useState<Customer | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
+    null
+  );
+  const [customerToDelete, setCustomerToDelete] = useState<Customer | null>(
+    null
+  );
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   useEffect(() => {
@@ -60,12 +64,27 @@ export default function CustomersPage() {
   const columnDefs: ColDef<Customer>[] = [
     {
       headerName: "Actions",
-      width: 200,
+      width: 170,
       cellRenderer: (params: ICellRendererParams) => (
-        <div style={{ display: "flex", gap: "0.5rem" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "0.5rem",
+            height: "100%",
+          }}
+        >
           <Button
             size="small"
-            color="primary"
+            sx={{
+              color: "#0077b6",
+              borderColor: "#0077b6",
+              "&:hover": {
+                backgroundColor: "#e0f2f1",
+                borderColor: "#005f87",
+              },
+            }}
             variant="outlined"
             onClick={() => handleEditButton(params)}
           >
@@ -82,13 +101,13 @@ export default function CustomersPage() {
         </div>
       ),
     },
-    { field: "firstname", filter: true, width: 100 },
-    { field: "lastname", filter: true, width: 150 },
+    { field: "firstname", filter: true, width: 120 },
+    { field: "lastname", filter: true, width: 120 },
     { field: "email", filter: true, width: 150 },
     { field: "phone", filter: true, width: 120 },
-    { field: "streetaddress", filter: true },
-    { field: "postcode", filter: true, width: 100 },
-    { field: "city", filter: true, width: 100 },
+    { field: "streetaddress", filter: true, width: 150 },
+    { field: "postcode", filter: true, width: 120 },
+    { field: "city", filter: true, width: 110 },
   ];
 
   return (
@@ -102,7 +121,7 @@ export default function CustomersPage() {
         }}
       />
 
-      <div className="ag-theme-material" style={{ width: "90%", height: 500 }}>
+      <div className="ag-theme-material" style={{ width: "95%", height: 500 }}>
         <AgGridReact
           rowData={customers}
           columnDefs={columnDefs}
@@ -111,7 +130,6 @@ export default function CustomersPage() {
         />
       </div>
 
-      {/* ✅ Use the actual Dialog-based delete component */}
       <DeleteCustomerDialog
         customer={customerToDelete}
         onCancel={() => setCustomerToDelete(null)}
