@@ -19,6 +19,14 @@ export default function App() {
           </Typography>
           <Button
             component={Link}
+            to="/home"
+            color="inherit"
+            variant={location.pathname === "/home" ? "outlined" : "text"}
+          >
+            Home
+          </Button>
+          <Button
+            component={Link}
             to="/customers"
             color="inherit"
             variant={location.pathname === "/customers" ? "outlined" : "text"}
