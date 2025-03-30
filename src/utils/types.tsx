@@ -26,5 +26,3 @@ export type Training = {
     phone: string;
   };
 };
-
-

@@ -12,6 +12,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.rbc-calendar {
+  z-index: 1; 
+}
 
 a {
   font-weight: 500;
