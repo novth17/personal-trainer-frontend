@@ -26,7 +26,8 @@ export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
-    fetchTrainingsWithCustomers().then((trainings: Training[]) => {
+    fetchTrainingsWithCustomers()
+    .then((trainings: Training[]) => {
       const calendarEvents: CalendarEvent[] = trainings.map((training) => ({
         title: `${training.activity} - ${training.customer.lastname}`,
         start: new Date(training.date),
