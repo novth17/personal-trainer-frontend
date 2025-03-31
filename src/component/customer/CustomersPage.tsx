@@ -10,12 +10,11 @@ import {
 } from "ag-grid-community";
 import Snackbar from "@mui/material/Snackbar";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import type { Customer } from "../../utils/types";
-import { fetchCustomers } from "../../utils/fetch";
+import { fetchCustomerByDelete, fetchCustomers } from "../../utils/fetch";
 import AddCustomer from "./AddCustomerDialog";
 import EditCustomer from "./EditCustomerDialog";
 import DeleteCustomerDialog from "./DeleteCustomerDialog";
@@ -56,11 +55,7 @@ export default function CustomersPage() {
     if (!customerToDelete) return;
 
     try {
-      const response = await fetch(customerToDelete._links.customer.href, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) throw new Error("Error deleting customer");
+      await fetchCustomerByDelete(customerToDelete._links.self.href);
 
       const updated = await fetchCustomers();
       setCustomers(updated);

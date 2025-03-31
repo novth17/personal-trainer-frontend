@@ -65,3 +65,30 @@ export const fetchTrainingByDelete = async (id: number | string) => {
     throw new Error("Error deleting training");
   }
 };
+
+//for DELETE a customer
+export const fetchCustomerByDelete = async (url: string) => {
+  const response = await fetch(url, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Error deleting customer");
+  }
+};
+
+// for ADD a customer
+export const fetchCustomerByPost = (customer: any) => {
+  return fetch(import.meta.env.VITE_CUSTOMER_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(customer),
+  }).then((response) => {
+    if (!response.ok) {
+      throw new Error("Error adding customer");
+    }
+    return response.json(); // no await here
+  });
+};

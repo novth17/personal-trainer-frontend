@@ -11,6 +11,7 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
+import { fetchCustomerByPost } from "../../utils/fetch";
 
 type AddCustomerProps = {
   fetchCustomer: () => void;
@@ -19,6 +20,16 @@ type AddCustomerProps = {
 export default function AddCustomer(props: AddCustomerProps) {
   const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const initialCustomer: Customer = {
+    firstname: "",
+    lastname: "",
+    streetaddress: "",
+    postcode: "",
+    city: "",
+    email: "",
+    phone: "",
+    _links: undefined,
+  };
   const [customer, setCustomer] = useState<Customer>({} as Customer);
 
   const handleClickOpen = () => {
@@ -42,18 +53,9 @@ export default function AddCustomer(props: AddCustomerProps) {
       return;
     }
 
-    fetch(import.meta.env.VITE_CUSTOMER_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(customer),
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error("Error adding customer");
-        return response.json();
-      })
+    fetchCustomerByPost(customer)
       .then(() => props.fetchCustomer())
+      .then(() => setCustomer(initialCustomer))
       .then(() => setOpen(false))
       .then(() => setSnackbarOpen(true))
       .catch((err) => console.error("Failed to add customer:", err));
