@@ -23,7 +23,7 @@ const Statistics = () => {
 
   return (
     <div>
-      <h2>Training Minutes by Activity</h2>
+      <h2>Total Training Duration by Activity</h2>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
