@@ -63,7 +63,6 @@ export default function Calendar() {
             padding: "4px",
           },
         })}
-        
       />
     </Box>
   );

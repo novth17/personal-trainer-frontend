@@ -22,7 +22,6 @@ import AddTrainingDialog from "../training/AddTrainingDialog";
 import { exportCustomers } from "../../utils/exportCustomers";
 import { Tooltip } from "@mui/material";
 
-
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 export default function CustomersPage() {
@@ -77,7 +76,7 @@ export default function CustomersPage() {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            gap: "1.3rem",
+            gap: "0.6rem",
             height: "100%",
           }}
         >

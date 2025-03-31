@@ -1,27 +1,21 @@
 import { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import _ from 'lodash';
-
-interface Training {
-  date: string;
-  duration: number;
-  activity: string;
-  customer: string;
-}
+import { fetchTrainingsWithCustomers } from '../utils/fetch';
 
 const Statistics = () => {
-  const [data, setData] = useState<Training[]>([]);
   const [chartData, setChartData] = useState<any[]>([]);
 
+/*   fetch the trainings from the backend
+  and group them by activity by groupBy
+  sum the duration of each activity by sumBy */
   useEffect(() => {
-    fetch('https://customer-rest-service-frontend-personaltrainer.2.rahtiapp.fi/api/gettrainings')
-      .then(res => res.json())
+    fetchTrainingsWithCustomers()
       .then(trainings => {
-        setData(trainings);
         const grouped = _.groupBy(trainings, 'activity');
         const summed = Object.keys(grouped).map(activity => ({
           activity,
-          minutes: _.sumBy(grouped[activity], 'duration'),
+          totalDuration: _.sumBy(grouped[activity], 'duration'),
         }));
         setChartData(summed);
       });
@@ -34,9 +28,9 @@ const Statistics = () => {
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="activity" />
-          <YAxis label={{ value: 'Minutes', angle: -90, position: 'insideLeft' }} />
+          <YAxis label={{ value: 'Total Duration', angle: -90, position: 'insideLeft' }} />
           <Tooltip />
-          <Bar dataKey="minutes" fill="#fc6c85" />
+          <Bar dataKey="totalDuration" fill="#fc6c85" />
         </BarChart>
       </ResponsiveContainer>
     </div>
