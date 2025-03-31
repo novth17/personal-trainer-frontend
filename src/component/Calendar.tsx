@@ -48,7 +48,11 @@ export default function Calendar() {
         endAccessor="end"
         views={["month", "week", "day"]}
         view={currentView}
-        onView={(view) => setCurrentView(view)}
+        onView={(view) => {
+          if (view === "month" || view === "week" || view === "day") {
+            setCurrentView(view);
+          }
+        }}
         date={currentDate}
         onNavigate={(date) => setCurrentDate(date)}
       />
