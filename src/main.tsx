@@ -6,6 +6,7 @@ import CustomersPage from "./component/customer/CustomersPage.tsx";
 import TrainingsPage from "./component/training/TrainingsPage.tsx";
 import Calendar from "./component/Calendar.tsx";
 import MainPage from "./component/MainPage.tsx";
+import Statistics from "./component/Statistics.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -17,6 +18,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/customers" element={<CustomersPage />} />
           <Route path="/trainings" element={<TrainingsPage />} />
           <Route path="/calendar" element={<Calendar />} />
+          <Route path="/statistics" element={<Statistics />} />
         </Route>
       </Routes>
     </BrowserRouter>

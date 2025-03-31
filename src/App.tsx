@@ -49,10 +49,16 @@ export default function App() {
           >
             Calendar
           </Button>
+          <Button
+            component={Link}
+            to="/statistics"
+            color="inherit"
+            variant={location.pathname === "/statistics" ? "outlined" : "text"}
+          >
+            Statistics
+          </Button>
         </Toolbar>
       </AppBar>
-      
-
       <Container sx={{ mt: 3 }}>
         <Outlet />
       </Container>

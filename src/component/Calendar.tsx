@@ -55,6 +55,15 @@ export default function Calendar() {
         }}
         date={currentDate}
         onNavigate={(date) => setCurrentDate(date)}
+        eventPropGetter={() => ({
+          style: {
+            backgroundColor: "#fc6c85", // Change to pink
+            borderRadius: "10px",
+            color: "white",
+            padding: "4px",
+          },
+        })}
+        
       />
     </Box>
   );

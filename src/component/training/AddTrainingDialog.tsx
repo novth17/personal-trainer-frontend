@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Snackbar from "@mui/material/Snackbar";
 import {
   Dialog,
   DialogTitle,
@@ -6,7 +7,6 @@ import {
   DialogActions,
   TextField,
   Button,
-  Snackbar,
   IconButton,
   Box,
 } from "@mui/material";
@@ -53,12 +53,12 @@ export default function AddTrainingDialog({ customer, onTrainingAdded }: Props) 
     fetchTrainingByPost(newTraining)
       .then(() => onTrainingAdded())
       .then(() => setOpen(false))
-      .then(() => setSnackbarOpen(true))
       .then(() => {
         setActivity("");
         setDuration("");
         setDate(dayjs());
       })
+      .then(() => setSnackbarOpen(true))
       .catch((err) => console.error("Failed to add training:", err));
   };
 
@@ -112,7 +112,7 @@ export default function AddTrainingDialog({ customer, onTrainingAdded }: Props) 
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={addTraining} variant="contained">
+          <Button onClick={() => addTraining()} variant="contained">
             Save
           </Button>
         </DialogActions>
@@ -120,7 +120,7 @@ export default function AddTrainingDialog({ customer, onTrainingAdded }: Props) 
 
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={2000}
+        autoHideDuration={3000}
         onClose={() => setSnackbarOpen(false)}
         message="Training added successfully!"
       />
