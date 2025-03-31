@@ -37,3 +37,31 @@ export async function fetchTrainingsWithCustomers(): Promise<Training[]> {
   const data: Training[] = await response.json();
   return data;
 }
+
+//for ADD a training
+export const fetchTrainingByPost = async (training: any) => {
+  const response = await fetch(import.meta.env.VITE_TRAINING_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(training),
+  });
+
+  if (!response.ok) {
+    throw new Error("Error adding training");
+  }
+
+  return response.json();
+};
+
+//for DELETE a training
+export const fetchTrainingByDelete = async (id: number | string) => {
+  const response = await fetch(`${import.meta.env.VITE_TRAINING_API_URL}/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Error deleting training");
+  }
+};

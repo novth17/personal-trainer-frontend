@@ -11,7 +11,10 @@ import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import type { Training } from "../../utils/types";
-import { fetchTrainingsWithCustomers } from "../../utils/fetch";
+import {
+  fetchTrainingByDelete,
+  fetchTrainingsWithCustomers,
+} from "../../utils/fetch";
 import DeleteTrainingDialog from "./DeleteTrainingDialog";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -35,14 +38,7 @@ export default function TrainingsPage() {
     if (!trainingToDelete) return;
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_TRAINING_API_URL}/${trainingToDelete.id}`,
-        {
-          method: "DELETE",
-        }
-      );
-
-      if (!response.ok) throw new Error("Error deleting training");
+      await fetchTrainingByDelete(trainingToDelete.id);
 
       const updated = await fetchTrainingsWithCustomers();
       setTrainings(updated);

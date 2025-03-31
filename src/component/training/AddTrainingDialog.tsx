@@ -15,6 +15,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { Customer } from "../../utils/types";
+import { fetchTrainingByPost } from "../../utils/fetch";
 
 type Props = {
   customer: Customer;
@@ -49,17 +50,7 @@ export default function AddTrainingDialog({ customer, onTrainingAdded }: Props) 
       customer: customer._links.customer.href,
     };
 
-    fetch(import.meta.env.VITE_TRAINING_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newTraining),
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error("Error adding training");
-        return response.json();
-      })
+    fetchTrainingByPost(newTraining)
       .then(() => onTrainingAdded())
       .then(() => setOpen(false))
       .then(() => setSnackbarOpen(true))
@@ -132,7 +123,6 @@ export default function AddTrainingDialog({ customer, onTrainingAdded }: Props) 
         autoHideDuration={2000}
         onClose={() => setSnackbarOpen(false)}
         message="Training added successfully!"
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       />
     </>
   );
