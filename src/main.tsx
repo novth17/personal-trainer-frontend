@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import App from "./App.tsx";
 import CustomersPage from "./component/customer/CustomersPage.tsx";
 import TrainingsPage from "./component/training/TrainingsPage.tsx";
@@ -10,7 +10,7 @@ import Statistics from "./component/Statistics.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<Navigate to="/home" replace />} />
@@ -21,6 +21,6 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/statistics" element={<Statistics />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </Router>
   </StrictMode>
 );
