@@ -10,7 +10,7 @@ import Statistics from "./component/Statistics.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<Navigate to="/home" replace />} />
