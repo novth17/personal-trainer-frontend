@@ -1,6 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  HashRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import App from "./App.tsx";
 import CustomersPage from "./component/customer/CustomersPage.tsx";
 import TrainingsPage from "./component/training/TrainingsPage.tsx";
