@@ -28,7 +28,7 @@ const Statistics = () => {
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="activity" />
-          <YAxis label={{ value: 'Total Duration', angle: -90, position: 'insideLeft' }} />
+          <YAxis label={{ value: 'Minute', angle: -90, position: 'insideLeft' }} />
           <Tooltip />
           <Bar dataKey="totalDuration" fill="#fc6c85" />
         </BarChart>
